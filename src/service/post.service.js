@@ -1,20 +1,32 @@
-import createHttpError from 'http-errors';
-import errors from '../errors/error';
-
 const posts = [];
 
-export const validatePost = (post) => {
-  if (!post.id) {
-    throw new createHttpError.BadRequest(errors.POST_MUST_CONTAIN_ID);
+export class Post {
+  static constructor() {
+    this.idCount = 0;
   }
 
-  return true;
-};
+  constructor() {
+    this.id = Post.idCount;
+    Post.idCount += 1;
 
+    this.content = '';
+    this.author = '';
+  }
+}
+
+/**
+ *
+ * @param {Post} post
+ * @returns {Post} insertedPost
+ */
 export const createPost = (post) => {
-  validatePost(post);
+  const ipost = new Post();
+  ipost.author = post.author;
+  ipost.content = post.content;
 
-  posts.push(post);
+  posts.push(ipost);
+
+  return ipost;
 };
 
 export const modifyPost = (postId, post) => {
@@ -22,6 +34,7 @@ export const modifyPost = (postId, post) => {
 
   const postKeys = Object.keys(post);
   const updated = {};
+
   postKeys.forEach((postKey) => {
     if (postKey !== 'id') {
       posts[postIndex][postKey] = post[postKey];
