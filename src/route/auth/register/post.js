@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { CreateUser, GetUser } = require('../../../service/user.service');
 
 const router = Router();
-router.post('/login', ({ body: { email, password } }, res) => {
+router.post('/', async ({ body: { email, password } }, res) => {
   if (!email) {
     return res.json({
       error: 'body.email is not included',
@@ -15,13 +15,13 @@ router.post('/login', ({ body: { email, password } }, res) => {
     });
   }
 
-  if (GetUser({ email, password })) {
+  if (await GetUser({ email, password })) {
     return res.json({
       error: 'User already exists',
     });
   }
 
-  const user = CreateUser({ email, password });
+  const user = await CreateUser({ email, password });
 
   return res.status(200).json({
     data: {

@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { GetUser } = require('../../../service/user.service');
 
 const router = Router();
-router.post('/login', ({ body: { email, password } }, res) => {
+router.post('/', async ({ body: { email, password } }, res) => {
   if (!email) {
     return res.json({
       error: 'body.email is not included',
@@ -15,7 +15,7 @@ router.post('/login', ({ body: { email, password } }, res) => {
     });
   }
 
-  const user = GetUser(email);
+  const user = await GetUser(email);
 
   if (!user || (user.password !== password)) {
     return res.json({

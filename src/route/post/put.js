@@ -5,10 +5,10 @@ const { Router } = require('express');
 
 const router = Router();
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;
-  const userId = req.headers['X-User-Id'];
+  const userId = req.headers['x-user-id'];
 
   if (!userId) {
     return res.json({
@@ -28,9 +28,9 @@ router.put('/:id', (req, res) => {
     });
   }
 
-  const user = GetUserById(parseInt(userId, 10));
+  const user = await GetUserById(parseInt(userId, 10));
 
-  const post = findPost(id);
+  const post = await findPost(id);
 
   if (!post) {
     return res.json({
@@ -38,16 +38,16 @@ router.put('/:id', (req, res) => {
     });
   }
 
-  if (post.author !== user.id) {
+  if (post.author !== user.id.toString()) {
     return res.json({
       error: 'Cannot modify post',
     });
   }
 
-  const updated = modifyPost(id, content);
+  const updated = await modifyPost(id, content);
   return res.status(200).json({
     data: {
-      id: updated.id,
+      id
     },
   });
 });
