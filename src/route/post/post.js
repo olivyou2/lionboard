@@ -1,16 +1,34 @@
+import { GetUserById } from '../../service/user.service';
+
 const { Router } = require('express');
-const createHttpError = require('http-errors');
-const { default: errors } = require('../../errors/error');
 const { createPost } = require('../../service/post.service');
 
 const router = Router();
-router.post('/', ({ body: { post } }, res) => {
-  if (!post) {
-    throw new createHttpError.BadRequest(errors.BODY_MUST_CONTAIN_POST);
+router.post('/', (req, res) => {
+  const userId = req.headers['X-User-Id'];
+
+  if (!userId) {
+    return res.json({
+      error: 'X-User-Id header is not included',
+    });
   }
 
-  createPost(post);
-  res.status(200).json(post);
+  const { content } = req.body;
+
+  if (!content) {
+    return res.json({
+      error: 'req.body.content is not included',
+    });
+  }
+
+  const author = GetUserById(userId).id;
+
+  const post = createPost({
+    author,
+    content,
+  });
+
+  return res.status(200).json({ data: { post: { id: post.id } } });
 });
 
 export default router;
