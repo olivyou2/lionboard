@@ -4,8 +4,8 @@ const { Router } = require('express');
 const { createPost } = require('../../service/post.service');
 
 const router = Router();
-router.post('/', (req, res) => {
-  const userId = req.headers['X-User-Id'];
+router.post('/', async (req, res) => {
+  const userId = req.headers['x-user-id'];
 
   if (!userId) {
     return res.json({
@@ -21,10 +21,8 @@ router.post('/', (req, res) => {
     });
   }
 
-  const author = GetUserById(userId).id;
-
-  const post = createPost({
-    author,
+  const post = await createPost({
+    author: userId,
     content,
   });
 

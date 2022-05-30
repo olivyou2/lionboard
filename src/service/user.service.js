@@ -1,30 +1,16 @@
-const users = [];
-
-export class User {
-  static constructor() {
-    this.idCount = 0;
-  }
-
-  constructor() {
-    this.email = '';
-    this.password = '';
-    this.id = User.idCount;
-
-    User.idCount += 1;
-  }
-}
+import User from '../../models/user';
 
 /**
  *
  * @param {User} user
  * @returns {User} insertedUser
  */
-export function CreateUser(user) {
+export async function CreateUser(user) {
   const iuser = new User();
   iuser.email = user.email;
   iuser.password = user.password;
 
-  users.push(user);
+  await iuser.save();
 
   return iuser;
 }
@@ -35,7 +21,7 @@ export function CreateUser(user) {
  * @returns {User} user
  */
 export function GetUser(email) {
-  return users.find((u) => u.email === email);
+  return User.findOne({ email });
 }
 
 /**
@@ -44,5 +30,5 @@ export function GetUser(email) {
  * @returns {User} user
  */
 export function GetUserById(id) {
-  return users.find((u) => u.id === id);
+  return User.findOne({ id });
 }
