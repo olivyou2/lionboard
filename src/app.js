@@ -1,13 +1,16 @@
-import express from 'express';
-import route from './route';
-import db from '../models';
+import express from "express";
+import route from "./route";
+import db from "../models";
+import { config } from "dotenv";
+
+config();
 
 const app = express();
 
 db.sequelize
-  .sync({ })
+  .sync({})
   .then(() => {
-    console.log('데이터베이스 연결 성공');
+    console.log("데이터베이스 연결 성공");
   })
   .catch((err) => {
     console.log(err);
