@@ -1,5 +1,5 @@
-import User from '../../models/user';
-
+import User from "../../models/user";
+import bcrypt from "bcrypt";
 /**
  *
  * @param {User} user
@@ -8,7 +8,7 @@ import User from '../../models/user';
 export async function CreateUser(user) {
   const iuser = new User();
   iuser.email = user.email;
-  iuser.password = user.password;
+  iuser.password = bcrypt.hashSync(user.password);
 
   await iuser.save();
 
@@ -22,6 +22,13 @@ export async function CreateUser(user) {
  */
 export function GetUser(email) {
   return User.findOne({ email });
+}
+
+export function GetUserPassword(email, password) {
+  return User.findOne({
+    email,
+    password: bcrypt.hash(password),
+  });
 }
 
 /**

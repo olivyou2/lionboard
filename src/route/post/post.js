@@ -1,15 +1,16 @@
-import { GetUserById } from '../../service/user.service';
+import { auth } from "../../middleware/auth";
+import { GetUserById } from "../../service/user.service";
 
-const { Router } = require('express');
-const { createPost } = require('../../service/post.service');
+const { Router } = require("express");
+const { createPost } = require("../../service/post.service");
 
 const router = Router();
-router.post('/', async (req, res) => {
-  const userId = req.headers['x-user-id'];
+router.post("/", auth, async (req, res) => {
+  const userId = req.headers["x-user-id"];
 
   if (!userId) {
     return res.json({
-      error: 'X-User-Id header is not included',
+      error: "X-User-Id header is not included",
     });
   }
 
@@ -17,7 +18,7 @@ router.post('/', async (req, res) => {
 
   if (!content) {
     return res.json({
-      error: 'req.body.content is not included',
+      error: "req.body.content is not included",
     });
   }
 
